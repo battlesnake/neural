@@ -4,6 +4,10 @@ Title:
 Author:
 	Mark K Cowan, mark@battlesnake.co.uk
 
+Installation:
+	This package is also available on CTAN:
+	http://www.ctan.org/tex-archive/graphics/pgf/contrib/neuralnetwork
+
 Description:
 	LaTeX package for drawing graphs, particularly neural network diagrams.
 
