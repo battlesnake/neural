@@ -5,8 +5,13 @@ Author:
 	Mark K Cowan, mark@battlesnake.co.uk
 
 Installation:
-	This package is also available on CTAN:
-	http://www.ctan.org/tex-archive/graphics/pgf/contrib/neuralnetwork
+	The most up-to-date version of this package is available as a git repository:
+		battlesnake/neural
+		https://github.com/battlesnake/neural
+		
+	This package is also available on CTAN as `neuralnetwork`:
+		/graphics/pgf/contrib/neuralnetwork
+		http://www.ctan.org/tex-archive/graphics/pgf/contrib/neuralnetwork
 
 Description:
 	LaTeX package for drawing graphs, particularly neural network diagrams.
