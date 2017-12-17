@@ -200,11 +200,11 @@
 \newcommand{\linklayers}[1][] {{%
   \setkeys{links} {title={},labels=\nn@defaultlinklabel,style={},not from={}, not to={},#1}
   % Layer indices
-  \edef\lastlayer{\nn@get{lastlayerindex}}
-  \edef\thislayer{\nn@get{thislayerindex}}
+  \edef\nn@lastlayer{\nn@get{lastlayerindex}}
+  \edef\nn@thislayer{\nn@get{thislayerindex}}
   % Links
-  \foreach \lastnode in {\nn@get{lastlayerstart},...,\nn@get{lastlayercount}}
-    \foreach \thisnode in {1,...,\nn@get{thislayercount}} {
+  \foreach \nn@lastnode in {\nn@get{lastlayerstart},...,\nn@get{lastlayercount}}
+    \foreach \nn@thisnode in {1,...,\nn@get{thislayercount}} {
       % Draw link if it isn't excluded
       \def\nn@dontdraw{0}
       \foreach \nn@excluded in \nn@notfrom
@@ -212,14 +212,14 @@
       \foreach \nn@excluded in \nn@notto
         \if \nn@excluded \nn@thisnode \global\def\nn@dontdraw{1} \breakforeach \fi;
       \if \nn@dontdraw 0
-        \link[from layer=\lastlayer, from node=\lastnode, to layer=\thislayer, to node=\thisnode, label=\nn@linkslabels, style=\nn@linksstyle];
+        \link[from layer=\nn@lastlayer, from node=\nn@lastnode, to layer=\nn@thislayer, to node=\nn@thisnode, label=\nn@linkslabels, style=\nn@linksstyle];
       \fi
     }
   % Title
   \ifdefempty{\nn@linkstitle} {} {
-    \pgfmathsetlengthmacro{\nn@links@title@x} {\nn@layerspacing * (\thislayer - 0.5)}
+    \pgfmathsetlengthmacro{\nn@links@title@x} {\nn@layerspacing * (\nn@thislayer - 0.5)}
     \pgfmathsetlengthmacro{\nn@links@title@y} {-(\nn@maintitleheight + \nn@layertitleheight - (\nn@nodespacing / 6))}
-    \node[linkstitle] (TL\lastlayer) at (\nn@links@title@x, \nn@links@title@y) {\nn@linkstitle};
+    \node[linkstitle] (TL\nn@lastlayer) at (\nn@links@title@x, \nn@links@title@y) {\nn@linkstitle};
   }
 }}
 
