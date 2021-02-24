@@ -1,0 +1,21 @@
+\documentclass{standalone}
+
+\usepackage{neuralnetwork}
+
+\begin{document}
+	\begin{neuralnetwork}[height=4,prune=70,layerspacing=20cm,
+		     linkcolor=violet!100,inputcolor=white!50,hiddencolor=white!40,
+				 outputcolor=white!50,neurondraw=true,linewidth=1.7pt,
+				 linkwidth=1.4pt,linkshorten=0pt
+				 ]
+		\newcommand{\nodetextclear}[2]{}
+		\newcommand{\nodetextx}[2]{$x_#2$}
+		\newcommand{\nodetexty}[2]{$y_#2$}
+		\inputlayer[count=16, bias=false, text=\nodetextclear]
+	  \hiddenlayer[count=64, bias=false, text=\nodetextclear]  \linklayers
+		\hiddenlayer[count=32, bias=false, text=\nodetextclear] \linklayers
+    \hiddenlayer[count=32, bias=false, text=\nodetextclear] \linklayers
+		\outputlayer[count=5, text=\nodetextclear] \linklayers
+	\end{neuralnetwork}
+
+\end{document}

@@ -15,6 +15,7 @@
 \RequirePackage{tikz}
 \RequirePackage{algorithmicx}
 \RequirePackage{mathtools}
+\usepackage[first=1,last=100,seed=1226]{lcg}
 
 \usetikzlibrary{shapes}
 
@@ -27,29 +28,43 @@
 \define@key{network}{nodespacing} {\pgfmathsetlengthmacro\nn@nodespacing{#1}}
 \define@key{network}{layerspacing} {\pgfmathsetlengthmacro\nn@layerspacing{#1}}
 \define@key{network}{height} {\def\nn@height{#1}}
+\define@key{network}{prune} {\def\nn@prune{#1}}
+\define@key{network}{inputcolor} {\def\nn@inputcolor{#1}}
+\define@key{network}{outputcolor} {\def\nn@outputcolor{#1}}
+\define@key{network}{hiddencolor} {\def\nn@hiddencolor{#1}}
+\define@key{network}{biascolor} {\def\nn@biascolor{#1}}
+\define@key{network}{linkcolor} {\def\nn@linkcolor{#1}}
+\define@boolkey{network}{neurondraw} {\ifKV@network@neurondraw\def\nn@neurondraw{1}\else\def\nn@neurondraw{0}\fi}
 \define@key{network}{maintitleheight} {\pgfmathsetlengthmacro\nn@maintitleheight{#1}}
 \define@key{network}{layertitleheight} {\pgfmathsetlengthmacro\nn@layertitleheight{#1}}
 \define@boolkey{network}{toprow} {\ifKV@network@toprow\def\nn@toprow{1}\else\def\nn@toprow{0}\fi}
 \define@key{network}{style} {\def\nn@style{#1}}
 \define@key{network}{nodesize} {\pgfmathsetlengthmacro\nn@nodesize{#1}}
+\define@key{network}{linewidth} {\pgfmathsetlengthmacro\nn@linewidth{#1}}
+\define@key{network}{linkwidth} {\pgfmathsetlengthmacro\nn@linkwidth{#1}}
+\define@key{network}{linkshorten} {\pgfmathsetlengthmacro\nn@linkshorten{#1}}
 \define@key{network}{title} {\def\nn@maintitle{#1}}
 \define@key{network}{titlestyle} {\def\nn@titlestyle{#1}}
 
 \NewEnviron{neuralnetwork}[1][] {{%
 \begingroup
-\setkeys{network} {nodespacing=1.0cm, layerspacing=2.5cm, maintitleheight=2.5em, layertitleheight=2.5em, height=5, toprow=false, nodesize=17pt, style={}, title={}, titlestyle={}, #1}
+\setkeys{network} {nodespacing=1.0cm, layerspacing=2.5cm, maintitleheight=2.5em, layertitleheight=2.5em, height=5, prune=0, toprow=false, nodesize=17pt, linewidth=0.4pt, linkwidth=0.4pt, linkshorten=1pt, biascolor=yellow!50, inputcolor=green!50, outputcolor=red!50, hiddencolor=blue!40, linkcolor=black!45, neurondraw=false, style={}, title={}, titlestyle={}, #1}
 \edef\nn@tikzpic@styled{\noexpand\begin{tikzpicture}[\nn@style]}
 \nn@tikzpic@styled
-  \tikzstyle{neuron}=[circle,fill=black!25,minimum size=\nn@nodesize,inner sep=0pt]
-  \tikzstyle{input neuron}=[neuron, fill=green!50];
-  \tikzstyle{output neuron}=[neuron, fill=red!50];
-  \tikzstyle{hidden neuron}=[neuron, fill=blue!40];
-  \tikzstyle{bias neuron}=[neuron, fill=yellow!50];
+\if\nn@neurondraw 1
+  \tikzstyle{neuron}=[circle,draw=black!100,fill=black!25,line width=\nn@linewidth,minimum size=\nn@nodesize,inner sep=0pt]
+\else
+\tikzstyle{neuron}=[circle,fill=black!25,line width=\nn@linewidth,minimum size=\nn@nodesize,inner sep=0pt]
+\fi
+  \tikzstyle{input neuron}=[neuron, fill=\nn@inputcolor];
+  \tikzstyle{output neuron}=[neuron, fill=\nn@outputcolor];
+  \tikzstyle{hidden neuron}=[neuron, fill=\nn@hiddencolor];
+  \tikzstyle{bias neuron}=[neuron, fill=\nn@biascolor];
   \tikzstyle{layertitle} = [text width=\nn@layerspacing - (1 em), text centered];
   \tikzstyle{layertitlewide} = [layertitle, text width=\nn@layerspacing + (2 em)];
   \tikzstyle{linkstitle} = [text centered, fill=white, text=darkgray, fill opacity=0.45, text opacity=1.0, inner sep=2pt, ellipse];
   \tikzstyle{linklabel} = [rectangle, fill=white, text opacity=1.0, text=black, text centered, inner sep=0pt];
-  \tikzstyle{link} = [->, shorten <=0pt, shorten >=1pt, node distance=\nn@layerspacing, thin, draw=black!45];
+  \tikzstyle{link} = [->, shorten <=0pt, shorten >=\nn@linkshorten, node distance=\nn@layerspacing, line width=\nn@linkwidth, draw=\nn@linkcolor];
   \tikzstyle{networktitle} = [rectangle, text=black, text centered, inner sep=0pt];
   \nn@var{layerindex}
   \nn@var{lastlayerstart} \nn@var{thislayerstart}
@@ -212,7 +227,9 @@
       \foreach \nn@excluded in \nn@notto
         \if \nn@excluded \nn@thisnode \global\def\nn@dontdraw{1} \breakforeach \fi;
       \if \nn@dontdraw 0
-        \link[from layer=\nn@lastlayer, from node=\nn@lastnode, to layer=\nn@thislayer, to node=\nn@thisnode, label=\nn@linkslabels, style=\nn@linksstyle];
+        \rand
+        \ifnum\arabic{rand}>\nn@prune
+        \link[from layer=\nn@lastlayer, from node=\nn@lastnode, to layer=\nn@thislayer, to node=\nn@thisnode, label=\nn@linkslabels, style=\nn@linksstyle] \fi
       \fi
     }
   % Title
